@@ -1,5 +1,5 @@
 <template>
-  <q-page class="row items-start justify-center q-my-xl container">
+  <q-page class="row items-start justify-center  container">
     <BookHotel />
   </q-page>
 </template>
