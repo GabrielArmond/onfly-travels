@@ -12,7 +12,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "server": "json-server --watch db/db.json --port 3000"
   },
   "dependencies": {
     "axios": "^1.2.1",
