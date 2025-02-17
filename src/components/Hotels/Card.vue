@@ -18,7 +18,8 @@
                 <span class="q-pr-sm text-grey-6 rating-score">{{ ratingModel.toFixed(1) }}</span>
                 <q-rating v-model="ratingModel" size="1.6em" color="yellow" icon="star_border" icon-selected="star"
                   no-dimming readonly />
-                <q-separator vertical inset size="2px" class="q-mx-xs" style="height: 16px;" color="grey-5" />
+                <q-separator v-if="hotel.amenities.length > 0" vertical inset size="2px" class="q-mx-xs"
+                  style="height: 16px;" color="grey-5" />
               </div>
               <q-icon v-for="amenity in hotel.amenities" :key="amenity.key" :name="amenity.icon" class="q-px-xs icon"
                 size="16px">

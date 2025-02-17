@@ -11,8 +11,9 @@
         Destino<span class="text-red text-weight-medium">*</span>
       </div>
       <div class="q-py-xs">
-        <q-select outlined dense :model-value="placeSelected" use-input hide-selected fill-input input-debounce="0"
-          input-style="width: 100%" :options="options" @filter="filterFn" @input-value="setModel">
+        <q-select outlined dense v-model="placeSelected" option-label="label" use-input hide-selected fill-input
+          input-debounce="0" input-style="width: 100%" :options="options" @filter="filterFn" @input="setModel"
+          :disable="hasSearch">
           <template v-slot:no-option>
             <q-item>
               <q-item-section class="text-grey">
@@ -23,8 +24,9 @@
         </q-select>
       </div>
       <div class="row justify-end q-mt-xs">
-        <q-btn color="primary" label="Buscar" size="md" rounded class="q-px-xl" style="font-size: 1rem;" no-caps
-          @click="searchPlace" />
+        <q-btn color="primary" :label="hasSearch ? 'Alterar busca' : 'Buscar'" size="md" rounded class="q-px-xl"
+          style="font-size: 1rem;" no-caps @click="hasSearch ? resetSearch() : searchPlace()"
+          :disable="!placeSelected" />
       </div>
     </q-card-section>
   </q-card>
@@ -36,9 +38,10 @@ import type { Places } from 'src/services/interfaces/Place';
 import { onMounted, ref } from 'vue';
 
 const placeOptions = ref<Array<Places>>([])
+const hasSearch = ref<boolean>(false)
 
-const placeSelected = ref<string>('')
-const options = ref<Array<string>>(placeOptions.value.map(place => place.name))
+const placeSelected = ref<Places | null>(null)
+const options = ref<Array<Places>>([])
 
 const emit = defineEmits(['placeSelected'])
 
@@ -49,21 +52,32 @@ async function fetchPlaces() {
 }
 
 function filterFn(val: string, update: (callback: () => void) => void) {
-  update(() => {
-    const search = val.toLocaleLowerCase()
+  const search = val.toLocaleLowerCase();
 
+  update(() => {
     options.value = placeOptions.value
-      .filter(v => v.name.toLocaleLowerCase().indexOf(search) > -1)
-      .map(v => `${v.name}, ${v.state.name}`)
-  })
+      .filter(v => v.name.toLocaleLowerCase().includes(search))
+      .map(v => ({
+        ...v,
+        label: `${v.name}, ${v.state.name}`
+      }));
+  });
 }
 
-function setModel(val: string) {
+function setModel(val: Places) {
   placeSelected.value = val
 }
 
 function searchPlace() {
-  emit('placeSelected', placeSelected.value)
+  const place = placeOptions.value.find(p => p.placeId === placeSelected.value?.placeId)
+
+  hasSearch.value = true
+  emit('placeSelected', place)
+}
+
+function resetSearch() {
+  hasSearch.value = false
+  placeSelected.value = null
 }
 
 onMounted(async () => {

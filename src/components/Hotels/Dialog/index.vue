@@ -1,6 +1,6 @@
 <template>
-  <q-dialog v-model="hotelStore.dialogHotel" position="right" class="public-sans">
-    <q-card style="width: 600px" bordered>
+  <q-dialog v-model="hotelStore.dialogHotel" position="right" class="public-sans" maximized>
+    <q-card full-height style="width: 600px" bordered>
       <q-card-section class="column no-wrap q-px-sm">
         <HotelDialogHeader />
         <q-carousel class="full-width" swipeable animated arrows v-model="slide" infinite>
@@ -14,8 +14,9 @@
         </q-carousel>
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section class>
         <Facilities />
+        <OtherDetails />
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -26,6 +27,7 @@ import HotelDialogHeader from 'src/components/Hotels/Dialog/Header.vue'
 import { useHotelsStore } from 'src/stores/HotelStore';
 import { computed, ref } from 'vue';
 import Facilities from './Facilities.vue';
+import OtherDetails from './OtherDetails.vue';
 
 const hotelStore = useHotelsStore()
 const slide = ref(0)

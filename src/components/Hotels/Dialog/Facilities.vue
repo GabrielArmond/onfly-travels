@@ -3,19 +3,20 @@
     <div>
       <span class="text-grey-9 facilities-title">Facilidades do hotel</span>
     </div>
-    <q-separator color="orange" inset />
-    <div class="q-mt-xs q-gutter-lg row items-start justify-start">
-      <span v-for="(facility, index) in visibleAmenities" :key="index" class="q-mb-xs text-grey-6">
+    <q-separator inset class="full-width q-mt-sm" color="grey-5" />
+    <div class="q-mt-md full-width row items-center justify-start wrap">
+      <span v-for="(facility, index) in visibleAmenities" :key="index" class="q-mb-xs text-grey-6 q-mr-md">
         <q-icon :name="facility.icon" class="q-px-xs icon" size="18px">
         </q-icon>
         <span style="font-size: 16px;">{{ facility.label }}</span>
       </span>
     </div>
-
-    <q-btn v-if="hotelStore.hotelSelected && visibleCount < hotelStore.hotelSelected.amenities.length" flat dense
-      color="primary" class="q-mt-md" @click="showMore">
-      Mostrar todas as facilidades
-    </q-btn>
+    <div v-if="showBtnMoreAmenities" class="row items-center justify-center full-width q-mt-md q-mb-xs">
+      <q-btn dense outline rounded color="info" class="q-px-md" @click="showMore">
+        Mostrar todas as facilidades
+      </q-btn>
+    </div>
+    <q-separator inset class="full-width q-my-md" color="grey-5" />
   </div>
 </template>
 
@@ -38,6 +39,10 @@ const visibleAmenities = computed<HotelAmenities[]>(() => {
 const showMore = () => {
   visibleCount.value += 4;
 };
+
+const showBtnMoreAmenities = computed(() => {
+  return hotelStore.hotelSelected && visibleCount.value < hotelStore.hotelSelected.amenities.length
+})
 </script>
 
 <style scoped>
