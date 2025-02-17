@@ -7,6 +7,7 @@ export const useHotelsStore = defineStore('hotels', {
     hotels: ref<Hotel[]>([]),
     hotelSelected: ref<Hotel | null>(null),
     loadingHotels: ref<boolean>(false),
+    dialogHotel: ref<boolean>(false),
   })
 });
 

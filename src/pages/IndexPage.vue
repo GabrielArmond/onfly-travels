@@ -9,14 +9,14 @@
       <HotelsCard class="q-py-xs" :hotel="hotel" @open-drawer="value => openDialog(value)" />
     </div>
   </q-page>
-  <HotelsDetailsDialog :open="openDialogHotel" />
+  <HotelsDialog />
 </template>
 
 <script setup lang="ts">
 import BookHotel from 'src/components/BookHotel.vue';
 import Breadcrumbs from 'src/components/Breadcrumbs.vue';
 import HotelsCard from 'src/components/Hotels/Card.vue';
-import HotelsDetailsDialog from 'src/components/Hotels/DetailsDialog.vue';
+import HotelsDialog from 'src/components/Hotels/Dialog/index.vue';
 import HotelSkeleton from 'src/components/Hotels/Skeleton.vue'
 import { onMounted, ref } from 'vue';
 import { hotelServiceInstance } from 'src/services';
@@ -25,7 +25,6 @@ import type { Hotel } from 'src/services/interfaces/Hotels';
 
 const hotelStore = useHotelsStore()
 const placeSelected = ref<string>('')
-const openDialogHotel = ref(false)
 
 async function fetchHotels() {
   hotelStore.loadingHotels = true
@@ -40,8 +39,9 @@ async function fetchHotels() {
 }
 
 function openDialog(hotel: Hotel) {
-  openDialogHotel.value = true
   hotelStore.hotelSelected = hotel
+
+  hotelStore.dialogHotel = true
 }
 onMounted(async () => {
   await fetchHotels()

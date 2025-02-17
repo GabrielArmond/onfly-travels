@@ -1,4 +1,4 @@
-type HotelAmenities = {
+export type HotelAmenities = {
   key: string,
   label: string,
   icon?: string

@@ -16,7 +16,7 @@
             <div class="q-mt-sm row items-center hotel-rating">
               <div class="row items-center">
                 <span class="q-pr-sm text-grey-6 rating-score">{{ ratingModel.toFixed(1) }}</span>
-                <q-rating v-model="ratingModel" size="1.6em" color="yellow-4" icon="star_border" icon-selected="star"
+                <q-rating v-model="ratingModel" size="1.6em" color="yellow" icon="star_border" icon-selected="star"
                   no-dimming readonly />
                 <q-separator vertical inset size="2px" class="q-mx-xs" style="height: 16px;" color="grey-5" />
               </div>
@@ -43,7 +43,7 @@
         <q-card-section class="col-3">
           <div class="column items-start q-gutter-xxs public-sans">
             <span class="price-label text-grey-6" style="font-size: 14px;">A partir de</span>
-            <span class="price-value text-grey-8" style="font-size: 18px;">{{ totalPriceHotel }}</span>
+            <span class="price-value text-grey-8" style="font-size: 20px;">{{ totalPriceHotel }}</span>
             <span class="price-night text-weight-bold text-grey-6">{{ formatMoney(hotel.price) }}/noite</span>
             <span class="price-includes">Impostos inclusos</span>
           </div>
@@ -69,7 +69,7 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['open-drawer'])
 
-const slide = ref(1)
+const slide = ref(0)
 const ratingModel = computed(() => Number(props.hotel.stars))
 
 const totalPriceHotel = computed(() => {
