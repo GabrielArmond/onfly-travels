@@ -27,19 +27,20 @@ const icons: Record<string, string> = {
 
 export function mapperHotelAmenities(hotels: Array<Hotels>): Array<Hotels> {
   const hotelsMapped = hotels.map(item => {
-    if (item.amenities) {
-      return {
-        ...item,
-        amenities: item.amenities.map(a => {
-          return {
-            ...a,
-            icon: icons[a.key] ?? 'bed'
-          }
-        })
-      }
+    return {
+      ...item,
+      hotels: item.hotels.map(hotel => {
+        return {
+          ...hotel,
+          amenities: hotel.amenities.map(amenity => {
+            return {
+              ...amenity,
+              icon: icons[amenity.key] ?? 'bed'
+            }
+          })
+        }
+      })
     }
-
-    return { ...item }
   })
 
   return hotelsMapped
