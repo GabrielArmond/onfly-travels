@@ -1,7 +1,7 @@
 <template>
-  <q-card class="my-card text-black q-mt-lg public-sans" style="width: 100%;">
+  <q-card data-testid="testId" class="my-card text-black q-mt-lg public-sans" style="width: 100%;">
     <q-card-section>
-      <div class="text-h5 text-grey-8 text-weight-bold">Reservar hotel</div>
+      <div class="text-h5 text-grey-8 text-weight-bold reserve-hotel">Reservar hotel</div>
     </q-card-section>
 
     <q-separator size="5px" />
