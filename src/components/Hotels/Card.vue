@@ -1,32 +1,37 @@
 <template>
   <div class="q-py-sm public-sans">
-    <q-card class="my-card" flat bordered>
+    <q-card class="my-card" flat style="max-height: 300px;">
       <q-card-section horizontal>
         <q-carousel class="col-5" swipeable animated arrows v-model="slide" infinite>
-          <q-carousel-slide :name="1" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
-          <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-          <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-          <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
+          <q-carousel-slide v-for="(image, index) in hotel.images" :key="index" :name="index"
+            class="column items-center justify-center q-pa-none">
+            <q-img :src="image" fit="cover" class="hotel-image" style="max-height: 300px;" />
+          </q-carousel-slide>
         </q-carousel>
 
         <q-card-section class="col-4">
           <div class="column items-start q-gutter-xs">
-            <span class="text-grey-9" style="font-size: 22px;">NOME HOTEL</span>
-            <span class="text-grey-6" style="font-size: 18px;">Dados Hotel</span>
-            <div class="q-mt-sm row items-center">
+            <span class="hotel-title text-grey-8" style="font-size: 18px;">{{ hotel.name }}</span>
+            <span class="hotel-location text-gray-6" style="font-size: 14px;">{{ hotelAddress }}</span>
+            <div class="q-mt-sm row items-center hotel-rating">
               <div class="row items-center">
-                <span class="q-pr-sm text-grey-6">{{ ratingModel.toFixed(1) }}</span>
+                <span class="q-pr-sm text-grey-6 rating-score">{{ ratingModel.toFixed(1) }}</span>
                 <q-rating v-model="ratingModel" size="1.6em" color="yellow-4" icon="star_border" icon-selected="star"
                   no-dimming readonly />
                 <q-separator vertical inset size="2px" class="q-mx-xs" style="height: 16px;" color="grey-5" />
               </div>
-              <q-icon name="wifi" class="q-px-xs" size="16px">
-                <q-tooltip class="bg-grey">Tooltip</q-tooltip>
+              <q-icon v-for="amenity in hotel.amenities" :key="amenity.key" :name="amenity.icon" class="q-px-xs icon"
+                size="16px">
+                <q-tooltip class="bg-grey">{{ amenity.label }}</q-tooltip>
               </q-icon>
             </div>
-            <div class="row items-center q-mt-sm">
-              <q-chip square dense size="lg" color="grey-6" text-color="white" class="q-px-md q-ma-none"
-                style="font-size: 18px;">
+            <div class="q-gutter-xs q-mt-sm">
+              <q-chip v-if="hotel.hasRefundableRoom" square dense size="md" color="grey-6" text-color="white"
+                class="q-px-md" style="font-size: 14px;">
+                Reembolsável
+              </q-chip>
+              <q-chip v-if="hotel.hasBreakFast" square dense size="md" color="grey-6" text-color="white" class="q-px-md"
+                style="font-size: 14px;">
                 Reembolsável
               </q-chip>
             </div>
@@ -37,13 +42,10 @@
 
         <q-card-section class="col-3">
           <div class="column items-start q-gutter-xxs public-sans">
-            <span class="text-grey-9" style="font-size: 14px;">A partir de</span>
-            <div>
-              <span class="text-grey-6" style="font-size: 12px;">R$</span>
-              <span style="font-size: 24px;">1.332,00</span>
-            </div>
-            <span class="text-grey-6">R$ 444,00/noite</span>
-            <span class="text-grey-8 text-weight-bold">Impostos inclusos</span>
+            <span class="price-label text-grey-6" style="font-size: 14px;">A partir de</span>
+            <span class="price-value text-grey-8" style="font-size: 18px;">{{ totalPriceHotel }}</span>
+            <span class="price-night text-weight-bold text-grey-6">{{ formatMoney(hotel.price) }}/noite</span>
+            <span class="price-includes">Impostos inclusos</span>
           </div>
           <div class="row justify-start q-mt-lg">
             <q-btn color="primary" label="Selecionar" size="md" rounded class="q-px-xl" style="font-size: 1rem;" no-caps
@@ -56,22 +58,89 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-// import { Hotel } from 'src/services/interfaces/Hotels';
+import type { Hotel } from 'src/services/interfaces/Hotels';
+import { formatMoney } from 'src/utils/utils';
 
-// interface Props {
-//   hotel: Hotel
-// }
-// defineProps<Props>()
-
-const ratingModel = ref(3)
+interface Props {
+  hotel: Hotel
+}
+const props = defineProps<Props>()
+const emit = defineEmits(['open-drawer'])
 
 const slide = ref(1)
+const ratingModel = computed(() => Number(props.hotel.stars))
+
+const totalPriceHotel = computed(() => {
+  // A partir de 3 diárias
+  return formatMoney(props.hotel.price * 3)
+})
+
+const hotelAddress = computed(() => {
+  const address = props.hotel.address
+
+  return `${address.city}, ${address.district}.`
+})
 
 function openDrawer() {
-  console.log('openDrawer')
+  emit('open-drawer', props.hotel)
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.hotel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hotel-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.hotel-location {
+  font-size: 14px;
+  color: gray;
+}
+
+.hotel-rating {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.rating-score {
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+.icon {
+  margin-left: 8px;
+  color: gray;
+}
+
+.hotel-price {
+  width: 20%;
+  padding: 16px;
+  text-align: center;
+  background: #f8f8f8;
+}
+
+.price-label {
+  font-size: 12px;
+  color: gray;
+}
+
+.price-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.price-night,
+.price-includes {
+  font-size: 12px;
+  color: gray;
+}
+</style>

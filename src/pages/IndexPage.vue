@@ -2,7 +2,9 @@
   <q-page class="column justify-start container" style="width: 100%;">
     <BookHotel @place-selected="place => placeSelected = place" />
     <Breadcrumbs :selected-city="placeSelected" />
-
+    <div v-if="hotelStore.loadingHotels" class="q-gutter-xs full-width">
+      <HotelSkeleton v-for="(_, index) in 5" :key="index" />
+    </div>
     <div class="q-gutter-xs full-width" v-for="(hotel, index) in hotelStore.hotels" :key="index">
       <HotelsCard class="q-py-xs" :hotel="hotel" @open-drawer="value => openDialog(value)" />
     </div>
@@ -15,6 +17,7 @@ import BookHotel from 'src/components/BookHotel.vue';
 import Breadcrumbs from 'src/components/Breadcrumbs.vue';
 import HotelsCard from 'src/components/Hotels/Card.vue';
 import HotelsDetailsDialog from 'src/components/Hotels/DetailsDialog.vue';
+import HotelSkeleton from 'src/components/Hotels/Skeleton.vue'
 import { onMounted, ref } from 'vue';
 import { hotelServiceInstance } from 'src/services';
 import { useHotelsStore } from 'src/stores/HotelStore';

@@ -34,7 +34,9 @@ export interface Hotel {
   price: number
 }
 
-export interface Hotels {
+export interface HotelWithPlace {
   hotels: Array<Hotel>,
   placeId: number | null
 }
+
+export type Hotels = Array<HotelWithPlace>
