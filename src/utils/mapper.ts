@@ -8,7 +8,7 @@ const icons: Record<string, string> = {
   LAUDRY: 'local_laundry_service',
   FITNESS_CENTER: 'fitness_center',
   POOL: 'pool',
-  AIR_CONDITIONING: 'air_purifier',
+  AIR_CONDITIONING: 'ac_unit',
   SAFE: 'lock',
   PUB: 'local_bar',
   MEETING_ROOM: 'meeting_room',
@@ -25,21 +25,22 @@ const icons: Record<string, string> = {
   ACEPTED_CAR_CREDIT: 'credit_card'
 }
 
-export function mapperHotelAmenities(hotels: Array<Hotels>): Array<Hotels> {
+export function mapperHotelAmenities(hotels: Hotels): Hotels {
   const hotelsMapped = hotels.map(item => {
-    if (item.amenities) {
-      return {
-        ...item,
-        amenities: item.amenities.map(a => {
-          return {
-            ...a,
-            icon: icons[a.key] ?? 'bed'
-          }
-        })
-      }
+    return {
+      ...item,
+      hotels: item.hotels.map(hotel => {
+        return {
+          ...hotel,
+          amenities: hotel.amenities ? hotel.amenities.map(amenity => {
+            return {
+              ...amenity,
+              icon: icons[amenity.key] ?? 'bed'
+            }
+          }) : []
+        }
+      })
     }
-
-    return { ...item }
   })
 
   return hotelsMapped

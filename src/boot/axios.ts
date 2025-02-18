@@ -1,4 +1,3 @@
-import { defineBoot } from '#q-app/wrappers';
 import axios, { type AxiosInstance } from 'axios';
 
 declare module 'vue' {
@@ -13,27 +12,24 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" }
 });
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (
-      error?.toString()?.includes('Network') ||
-      (error.request._hasError === true && error.request._response.includes('connect'))
-    ) {
-      return Promise.reject(new Error('Ocorreu um erro ao acessar o sistema.'))
+if (process.env.NODE_ENV !== 'test') {
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (
+        error?.toString()?.includes('Network') ||
+        (error.request._hasError === true && error.request._response.includes('connect'))
+      ) {
+        return Promise.reject(new Error('Ocorreu um erro ao acessar o sistema.'))
+      }
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return Promise.reject(new Error('Sessão Expirada! Faça login novamente.'))
+      }
+      return Promise.reject(new Error(
+        error?.response?.data?.message || error?.response?.data || error?.response)
+      )
     }
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      return Promise.reject(new Error('Sessão Expirada! Faça login novamente.'))
-    }
-    return Promise.reject(new Error(
-      error?.response?.data?.message || error?.response?.data || error?.response)
-    )
-  }
-)
-
-export default defineBoot(({ app }) => {
-  app.config.globalProperties.$axios = axios;
-  app.config.globalProperties.$api = api;
-});
+  )
+}
 
 export { api };
