@@ -9,6 +9,7 @@
     }
   ],
   "routes": [
+    { "src": "/db/(.*)", "dest": "/public/db/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
