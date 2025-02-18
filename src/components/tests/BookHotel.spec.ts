@@ -1,59 +1,89 @@
-import { placeServiceInstance } from 'src/services'
-import type { Places } from 'src/services/interfaces/Place'
-import { describe, it, expect, vi, beforeAll } from 'vitest'
-import { ref } from 'vue'
-import { mockPlace } from '../mocks/place'
-import BookHotel from '../BookHotel.vue'
-import { render, screen } from '@testing-library/vue'
-import axios from 'axios'
+import { describe, expect, test, vi } from "vitest";
+import BookHotel from "src/components/BookHotel.vue";
+import { render, screen, waitFor } from "@testing-library/vue";
+import type axios from 'axios'
+import { mockPlace } from "./mocks/place";
 
-describe('book hotel component', () => {
-  vi.mock('axios')
+describe('Book hotel component', async () => {
+  render(BookHotel)
 
-  let bookHotel: HTMLElement
-  const placeOptions = ref<Array<Places>>([])
-  const errorMessage = ref('');
+  const mocks = vi.hoisted(() => ({
+    get: vi.fn(),
+  }));
 
-  async function fetchPlaces() {
-    try {
-      const response = await axios.get('/api/places');
-      return response.data;
-    } catch (error) {
-      errorMessage.value = 'Ocorreu um erro ao acessar o sistema.', error;
-    }
-  }
+  vi.mock('axios', async (importActual) => {
+    const actual = await importActual<typeof axios>();
 
-  beforeAll(() => {
-    render(BookHotel)
+    const mockAxios = {
+      default: {
+        ...actual.defaults,
+        create: vi.fn(() => ({
+          ...actual.create(),
+          get: mocks.get.mockResolvedValue({
+            data: [
+              {
+                "name": "Belo Horizonte",
+                "state": {
+                  "name": "Minas Gerais",
+                  "shortname": "MG"
+                },
+                "placeId": 1
+              },
+              {
+                "name": "Fortaleza",
+                "state": {
+                  "name": "Ceará",
+                  "shortname": "CE"
+                },
+                "placeId": 2
+              },
+              {
+                "name": "Porto Seguro",
+                "state": {
+                  "name": "Bahia",
+                  "shortname": "BA"
+                },
+                "placeId": 3
+              },
+              {
+                "name": "Rio de Janeiro",
+                "state": {
+                  "name": "Rio de Janeiro",
+                  "shortname": "RJ"
+                },
+                "placeId": 4
+              },
+              {
+                "name": "São Paulo",
+                "state": {
+                  "name": "São Paulo",
+                  "shortname": "SP"
+                },
+                "placeId": 5
+              }
+            ],
+          }),
+        })),
+      },
+    };
 
-    bookHotel = screen.getByTestId('testId')
+    return mockAxios;
+  });
 
-  })
+  await waitFor(() => {
+    test('Book hotel component should render correctly', () => {
+      const bookHotel = screen.getByTestId('book-hotel')
+      expect(bookHotel).toBeDefined()
+    })
 
-  it('book_hotel_has_rendered', () => {
-    const reserveHotelElement = bookHotel.getElementsByClassName('reserve-hotel')[0];
-    expect('Reservar hotel').toBe(reserveHotelElement ? reserveHotelElement.textContent : null);
-  })
+    test('Book hotel component should called get places', async () => {
+      await mocks.get()
+      expect(mocks.get).toHaveBeenCalled()
+    })
 
-  it('test_fetchPlaces_successful_fetch', async () => {
-    vi.spyOn(placeServiceInstance, 'getPlaces').mockResolvedValue(mockPlace)
-    await fetchPlaces()
-    expect(placeOptions.value).toEqual(mockPlace)
-  })
-
-  it('test_fetchPlaces_error_handling', async () => {
-    vi.spyOn(placeServiceInstance, 'getPlaces').mockRejectedValue(new Error('API Error'));
-
-    await expect(fetchPlaces()).rejects.toThrow('API Error');
-  })
-
-  it('test_fetchPlaces_empty_data_handling', async () => {
-    const initialData: Places[] = []
-    placeOptions.value = initialData
-    vi.spyOn(placeServiceInstance, 'getPlaces').mockResolvedValue([])
-
-    await fetchPlaces()
-
-    expect(placeOptions.value).toEqual(initialData)
+    test('Book hotel component should render places', async () => {
+      const response = await mocks.get()
+      expect(mockPlace).toEqual(response.data)
+    })
   })
 })

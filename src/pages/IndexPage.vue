@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column justify-start container" style="width: 100%;">
+  <q-page data-testid="index-page" class="column justify-start container" style="width: 100%;">
     <BookHotel @place-selected="place => placeStore.placeSelected = place" />
     <Breadcrumbs :selected-city="placeStore.placeSelected || null" @update-filter="val => orderBy = val" />
     <div v-if="hotelStore.loadingHotels" class="q-gutter-xs full-width">

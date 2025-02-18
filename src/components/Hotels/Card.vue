@@ -1,5 +1,5 @@
 <template>
-  <div class="q-py-sm public-sans">
+  <div data-testid="hotel-card" class="q-py-sm public-sans">
     <q-card class="my-card" flat style="max-height: 300px;">
       <q-card-section horizontal>
         <q-carousel class="col-5" swipeable animated arrows v-model="slide" infinite>
@@ -10,7 +10,7 @@
         </q-carousel>
 
         <q-card-section class="col-4">
-          <div class="column items-start q-gutter-xs">
+          <div class="column items-start q-gutter-xs hotel-data">
             <span class="hotel-title text-grey-8" style="font-size: 18px;">{{ hotel.name }}</span>
             <span class="hotel-location text-gray-6" style="font-size: 14px;">{{ hotelAddress }}</span>
             <div class="q-mt-sm row items-center hotel-rating">
