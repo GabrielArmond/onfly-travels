@@ -19,7 +19,7 @@ interface HotelsPaginated {
 
 export default class HotelService {
   async getHotels(params: HotelsParams): Promise<HotelsPaginated> {
-    const response = await api.get<Hotels>('hotel.json')
+    const response = await api.get<Hotels>('/db/hotel.json')
 
     const hotelsData = mapperHotelAmenities(response.data)
 
