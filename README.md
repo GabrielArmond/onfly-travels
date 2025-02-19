@@ -1,6 +1,8 @@
 # onfly-mobile (onfly)
 
-Onfly travels test
+Onfly Travels app
+
+Test the app at: https://gabrielarmond.github.io/onfly-travels/
 
 ## Install the dependencies
 ```bash
@@ -23,17 +25,14 @@ npm run lint
 ```
 
 
-### Format the files
-```bash
-yarn format
-# or
-npm run format
-```
-
-
 ### Build the app for production
 ```bash
-quasar build
+npm run build
+```
+
+### Run tests in app
+```bash
+npm run test
 ```
 
 ### Customize the configuration
