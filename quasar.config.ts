@@ -54,7 +54,7 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      publicPath: '/',
+      publicPath: '/onfly-travels',
       // analyze: true,
       // env: {},
       // rawDefine: {}
