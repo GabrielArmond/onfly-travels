@@ -8,6 +8,7 @@
       }
     }
   ],
+  "outputDirectory": "dist/spa",
   "routes": [
     { "src": "/db/(.*)", "dest": "/db/$1" }, 
     { "src": "/(.*)", "dest": "/index.html" }
