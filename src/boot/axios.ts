@@ -8,7 +8,7 @@ declare module 'vue' {
 }
 
 const api = axios.create({
-  baseURL: '/db',
+  baseURL: '/onfly-travels/db',
   headers: { "Content-Type": "application/json" }
 });
 
